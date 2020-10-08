@@ -1,12 +1,12 @@
 clear;
 clf;
 
-% dname = 'Data';   % Directory name
+dname = 'Data';   % Directory name
 % % File names of data
-% fname = {'data_p32.mat', 'data_pv32.mat', 'data_pf32.mat', 'data_pvf32.mat'};
-% fname2 = {'data_stab_p32.mat', 'data_stab_pv32.mat', 'data_stab_pf32.mat', 'data_stab_pvf32.mat'};
+fname = {'data_p32.mat', 'data_pv32.mat', 'data_pf32.mat', 'data_pvf32.mat'};
+fname2 = {'data_stab_p32.mat', 'data_stab_pv32.mat', 'data_stab_pf32.mat', 'data_stab_pvf32.mat'};
 
-dname = 'SensitivityAnalysis';   % Directory name
+% dname = 'SensitivityAnalysis';   % Directory name
 % % File names of data
 % fname = {'data_p32x0.001.mat', 'data_pv32x0.001.mat', 'data_pf32x0.001.mat', 'data_pvf32x0.001.mat'};
 % fname2 = {'data_stab_p32x0.001.mat', 'data_stab_pv32x0.001.mat', 'data_stab_pf32x0.001.mat'};
@@ -60,7 +60,7 @@ for n=1:nset
         title('Hand speed');
     end
     xlabel('Time [s]');
-    ylabel('Speed [m/s]');
+    ylabel('Velocity [m/s]');
     axis square; box off;
     
     % Hand force
@@ -205,7 +205,7 @@ for n=1:nset
     xlim ([0 0.5]);
     title('Hand speed');
     xlabel('Time [s]');
-    ylabel('Speed [m/s]');
+    ylabel('Velocity [m/s]');
     xticks([0 0.2 0.4 0.5]);
     axis square; box off;
     % Hand force
