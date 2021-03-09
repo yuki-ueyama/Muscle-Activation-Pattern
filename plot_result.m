@@ -3,7 +3,8 @@ clf;
 
 dname = 'Data';   % Directory name
 % % File names of data
-fname = {'data_p32.mat', 'data_pv32.mat', 'data_pf32.mat', 'data_pvf32.mat'};
+% fname = {'data_p32.mat', 'data_pv32.mat', 'data_pf32.mat', 'data_pvf32.mat'};
+fname = {'data_tmp_p32.mat', 'data_tmp_pv32.mat', 'data_tmp_pf32.mat', 'data_tmp_pvf32.mat'};
 fname2 = {'data_stab_p32.mat', 'data_stab_pv32.mat', 'data_stab_pf32.mat', 'data_stab_pvf32.mat'};
 
 % dname = 'SensitivityAnalysis';   % Directory name
@@ -21,8 +22,23 @@ fname2 = {'data_stab_p32.mat', 'data_stab_pv32.mat', 'data_stab_pf32.mat', 'data
 % fname = {'data_p32x1000.mat', 'data_pv32x1000.mat', 'data_pf32x1000.mat', 'data_pvf32x1000.mat'};
 % fname2 = {'data_stab_p32x1000.mat', 'data_stab_pv32x1000.mat', 'data_stab_pf32x1000.mat'};
 
+% dname = 'SensitivityAnalysis';   % Directory name
+% File names of data
+% fname = {'data_tmp_p32x0.001.mat', 'data_tmp_pv32x0.001.mat', 'data_tmp_pf32x0.001.mat', 'data_tmp_pvf32x0.001.mat'};
+% fname2 = {'data_stab_p32x0.001.mat', 'data_stab_pv32x0.001.mat', 'data_stab_pf32x0.001.mat'};
+% fname = {'data_tmp_p32x0.01.mat', 'data_tmp_pv32x0.01.mat', 'data_tmp_pf32x0.01.mat', 'data_tmp_pvf32x0.01.mat'};
+% fname2 = {'data_stab_p32x0.01.mat', 'data_stab_pv32x0.01.mat', 'data_stab_pf32x0.01.mat'};
+% fname = {'data_tmp_p32x0.1.mat', 'data_tmp_pv32x0.1.mat', 'data_tmp_pf32x0.1.mat', 'data_tmp_pvf32x0.1.mat'};
+% fname2 = {'data_stab_p32x0.1.mat', 'data_stab_pv32x0.1.mat', 'data_stab_pf32x0.1.mat'};
+% fname = {'data_tmp_p32x10.mat', 'data_tmp_pv32x10.mat', 'data_tmp_pf32x10.mat', 'data_tmp_pvf32x10.mat'};
+% fname2 = {'data_stab_p32x10.mat', 'data_stab_pv32x10.mat', 'data_stab_pf32x10.mat'};
+% fname = {'data_tmp_p32x100.mat', 'data_tmp_pv32x100.mat', 'data_tmp_pf32x100.mat', 'data_tmp_pvf32x100.mat'};
+% fname2 = {'data_stab_p32x100.mat', 'data_stab_pv32x100.mat', 'data_stab_pf32x100.mat'};
+% fname = {'data_tmp_p32x1000.mat', 'data_tmp_pv32x1000.mat', 'data_tmp_pf32x1000.mat', 'data_tmp_pvf32x1000.mat'};
+% fname2 = {'data_stab_p32x1000.mat', 'data_stab_pv32x1000.mat', 'data_stab_pf32x1000.mat'};
 %% Plot simulated results
-figure(1);
+% figure(1);
+figure('Name','Trajectories', 'Position', [0 100 800 800]);
 nset = length(fname);
 umax = zeros(nset, 6);
 amax = zeros(nset, 6);
@@ -39,7 +55,7 @@ for n=1:nset
     % Hand trajectory
     subplot(nset,4,4*(n-1)+1);
    h = plot(100*hand_target(1, d_list)-100*repmat(xy0(1, 1), [1 length(d_list)]), ...
-        100*hand_target(2, d_list)-100*repmat(xy0(2, 1), [1 length(d_list)]),'go');
+        100*hand_target(2, d_list)-100*repmat(xy0(2, 1), [1 length(d_list)]),'o', 'Color', [0.8 0.8 0.8]);
     set(h, 'MarkerFaceColor', get(h,'Color')); 
     hold on;
     plot(100*squeeze(hand_pos(1, :, d_list)), 100*squeeze(hand_pos(2, :, d_list)));
@@ -61,17 +77,20 @@ for n=1:nset
     end
     xlabel('Time [s]');
     ylabel('Velocity [m/s]');
+    xticks([0 0.2 0.4 0.5]);
     axis square; box off;
     
     % Hand force
     subplot(nset,4,4*(n-1)+3)
     plot(time, squeeze(sqrt(sum(hand_force(1:2, :, d_list).^2)))');
-    ylim ([0 4.0]);
+     ylim ([0 4.0]);
+%     ylim ([0 3.0]);
     if n == 1
         title('Hand force');
     end
     xlabel('Time [s]');
     ylabel('Force norm [N]');
+    xticks([0 0.2 0.4 0.5]);
     axis square; box off;
     
     % Joint torque
@@ -84,6 +103,7 @@ for n=1:nset
     end
     xlabel('Time [s]');
     ylabel('Torque [Nm]');
+    xticks([0 0.2 0.4 0.5]);
     axis square; box off; hold off;
     
     for k=1:6
@@ -93,6 +113,7 @@ for n=1:nset
 end
 
 %% Plot muscle activation patterns
+% figure('Name','Muscle activation patterns', 'Position', [0 100 400 400]);
 colormap('default');    % colormap('gray');
 thres = 0;
 clims = [repmat(thres, [6 1]) max(amax)'];
@@ -111,7 +132,8 @@ for n=1:nset
     %     U(:,2:N,1:directions, n) = u;
     U(:,1:N,1:directions, n) = x(5:10,:,:);
     U(:,:,directions+1, n) = U(:,:,1, n);
-    figure(n+1);
+    f = figure(n+1);
+    set(f,'Position', [100 100 350 250]);
     subplot(2,3,1);
     imagesc(time, angles, squeeze(U(1,:,:, n))', clims(1,:));
     title('SF');
@@ -185,10 +207,11 @@ for n=1:nset
     U(:,1:N,1:directions, n) = x(5:10,:,:);
     U(:,:,directions+1, n) = U(:,:,1, n);
     % Hand trajectory
-    figure(10+n);
+    f = figure(10+n);    
+    set(f,'Position', [100 100 400 400]);
     subplot(2,2,1);
     h = plot(100*hand_target(1, d_list)-100*repmat(xy0(1, 1), [1 length(d_list)]), ...
-        100*hand_target(2, d_list)-100*repmat(xy0(2, 1), [1 length(d_list)]),'go');
+        100*hand_target(2, d_list)-100*repmat(xy0(2, 1), [1 length(d_list)]),'o', 'Color', [0.8 0.8 0.8]);
     set(h, 'MarkerFaceColor', get(h,'Color')); 
     hold on;
     plot(100*squeeze(hand_pos(1, :, d_list)), 100*squeeze(hand_pos(2, :, d_list)));
@@ -230,7 +253,8 @@ for n=1:nset
     ylabel('Torque [Nm]');
     axis square; box off; hold off;
     
-    figure(20+n);
+    f = figure(20+n);
+    set(f,'Position', [100 100 350 250]);
     subplot(2,3,1);
     imagesc(time, angles, squeeze(U(1,:,:, n))');
     title('SF');

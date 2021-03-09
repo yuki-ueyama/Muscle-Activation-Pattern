@@ -6,12 +6,9 @@ global flgFix;
 % Default
 lambdaInit = 0.1;        % Initial value of Levenberg-Marquardt lambda
 lambdaFactor = 10;       % Factor for multiplying or dividing lambda
-% For stabilization control (Case 5) and sensitivity analysis
-% lambdaInit = 1;
-% lambdaFactor = 5;     
-%  For sensitivity analysis
-lambdaInit = 1000;
-lambdaFactor = 5;
+% For sensitivity analysis
+% lambdaInit = 1000;
+% lambdaFactor = 5;
 
 lambdaMax = 1e+10;       % Exit if lambda exceeds threshold
 epsConverge = 1e-10;     % Exit if relative improvement below threshold
