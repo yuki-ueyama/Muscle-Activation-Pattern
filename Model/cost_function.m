@@ -25,14 +25,30 @@ else
     disp('Error; Set simset.cost adequately !!!');
 end
 
+cost_flg = 0;
 if strcmp(simset.ctl, 't')
-    N = simset.mt/simset.dt + 1;  % final step
+     N = simset.mt/simset.dt + 1;  % final step
+     if isnan(t)
+         cost_flg = 1;
+     end
 elseif strcmp(simset.ctl, 's')
-    stab_period = 0.1;                                      % Stabilization period: 0.1 [s]
-    N = simset.mt/simset.dt + 1 - stab_period/simset.dt;    % Stabilization step
-    wp = wp/stab_period;
-    wv = wv/stab_period;
-    wf = wf/stab_period;
+    end_period = 0.1;                                      % Stabilization period: 0.1 [s]
+    N = simset.mt/simset.dt + 1 - end_period/simset.dt;    % Stabilization step
+    wp = wp/end_period;
+    wv = wv/end_period;
+    wf = wf/end_period;    
+    if t > N
+        cost_flg = 1;
+    end
+elseif strcmp(simset.ctl, 'c')
+    end_period = 0.1; 
+    N = simset.mt/simset.dt + 1- end_period/simset.dt;  % Temporal step
+    wp = wp/simset.dt;
+    wv = wv/simset.dt;
+    wf = wf/simset.dt;
+    if t == N + 1
+        cost_flg = 1;
+    end
 else
     disp('Error; Set simset.ctl to ''s'' or ''t'' !!!');
 end
@@ -42,7 +58,7 @@ vel = zeros(2,szX2);
 force = zeros(2,szX2);
 
 % Compute cost
-if isnan(t) || t > N
+if cost_flg
     [e, edot, edotdot] = culc_kinematics(x(1:2,:));
     [Jacob, Jdot, Jdot_theta1, Jdot_theta2, Jdotdot_theta1, Jdotdot_theta2] = culc_jacobian(x(1:2,:));
     [T, Tdot_a, Tdot_aa, Tdot_theta, Tdotdot_theta, ...
@@ -55,7 +71,7 @@ if isnan(t) || t > N
         vel(:, k) = squeeze(Jacob(:,:,k))*x(3:4, k);
         force(:, k) = squeeze(Jacob(:,:,k))'\torque(:, k);
     end
-             
+
     if strcmp(simset.coor, 'c')
         l(1,:) = wp*sum((e-target).^2) + wv*sum(vel.^2) + wf*sum(force.^2);
     elseif strcmp(simset.coor, 'j')
@@ -63,10 +79,11 @@ if isnan(t) || t > N
         l(1,:) = wp*sum((x(1:2,:)-joint_target).^2) + wv*sum(x(3:4,:).^2) + wf*sum(torque.^2);
     else
         disp('Error; Set mode.coor to ''c'' or ''j'' !!!');
+        return;
     end  
 
     l(1,:) = l(1,:) + wu*sum(u.^2);
-    
+       
 else % Effort cost
     l(1,:) =  wu*sum(u.^2) ;
 end
@@ -81,7 +98,7 @@ if nargout > 1
     l_e = zeros(6, 1);
     e_x = zeros(6, szX);
     
-    if isnan(t) || t >N
+    if cost_flg
         if strcmp(simset.coor, 'c')           % Cartesian coordinate
             l_e(1:2, 1) = 2*wp*(e(:,1)-target(:,1)) ;
             l_e(3:4, 1) = 2*wv*vel(:,1) ;
@@ -130,7 +147,6 @@ if nargout > 1
             e_xx(5:6, 5:10) = Jacob'\(J*diag(Tdot_aa));
                
             l_xx = e_x'*diag(l_ee)*e_x + diag(e_xx'*l_e);
-            
         else            % Joint coordinate
             l_x(1:2) = 2*wp*(x(1:2)-joint_target) + 2*wf*(J*Tdot_theta)'*torque;
             l_x(3:4) = 2*wv*x(3:4) + 2*wf*(J*Tdot_thetadot)'*torque;
