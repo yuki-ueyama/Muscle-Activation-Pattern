@@ -4,13 +4,18 @@ addpath('Model');   % Add sub-folder
 
 %% Simulation setting ----------------------------------------------
 % simset.ctl: control mode
-%   t: terminal control; s: stabilization contro%
+%   t: terminal control;
+%   s: stabilization control; 
+%   c: constraint states at a temporal time;
 % simset.cost: structure of the cost function
-%   p: postion; pv: postion + velocity; pvf: postion + velocity + force(or toruque)%
+%   p: postion;
+%   pv: postion + velocity;
+%   pvf: postion + velocity + force(or torque)
 % simset.coor: coordinate of the cost funtion
-%   c: Cartesian (endpoint); j: joint
+%   c: Cartesian (endpoint);
+%   j: joint
 simset.ctl  = 't'; 
-simset.cost = 'pf'; 
+simset.cost = 'pvf'; 
 simset.coor = 'c';
 
 % Scaling factor for sensitive analysis
@@ -27,10 +32,14 @@ if strcmp(simset.ctl, 't')
     simset.mt = 0.40;      % Movement time [s]
     filename_opt = '';
 elseif strcmp(simset.ctl, 's')
-    simset.mt = 0.50;      % Movement time for stabilizing control [s]
+    simset.mt = 0.50;
     filename_opt = 'stab_';
+elseif strcmp(simset.ctl, 'c')
+    simset.mt = 0.50;
+    filename_opt = 'tmp_';
 else
-    disp('Error; Set simset.ctl to ''s'' or ''t'' !!!');
+    disp('Error; Set simset.ctl to ''s'', ''t'' or ''c'' !!!');
+    return;
 end
 
 simset.dt = 0.005;       % Size of time-step [s]
@@ -48,7 +57,7 @@ xy0 = [0.08; 0.22];      % Almost equal to a muscle equilibrium point
 % Target positions
 alpha = 2*pi*(0:directions-1)./directions;  % Reaching directions
 hand_target = repmat(xy0, [1 directions]) + distance*[cos(alpha); sin(alpha)];
-joint_target = culc_inv_kinematics(hand_target);
+% joint_target = culc_inv_kinematics(hand_target);
 
 %  Initialize state and control signal
 initial = culc_inv_kinematics(xy0);
