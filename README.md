@@ -7,10 +7,10 @@ The code ‘main.m’ computes the optimal control using ILQG, and executes the 
 
 # Data set
 There are four data sets in the directory ‘Data’. The files are the precomputed results of different cost functions. 
-data_p32.mat       : Case 1;
-data_pv32.mat      : Case 2;
-data_pf32.mat      : Case 3;
-data_pvf32.mat     : Case 4;
+data_tmp_p32.mat       : Case 1;
+data_tmp_pv32.mat      : Case 2;
+data_tmp_pf32.mat      : Case 3;
+data_tmp_pvf32.mat     : Case 4;
 
 Stabilization Control:
 data_stab_p32.mat, data_stab_pv32.mat
