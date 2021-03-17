@@ -11,8 +11,9 @@ data_p32.mat       : Case 1;
 data_pv32.mat      : Case 2;
 data_pf32.mat      : Case 3;
 data_pvf32.mat     : Case 4;
-data_stab_p32.mat  : Case 5;
-data_stab_pv32.mat : Case 6.
+
+Stabilization Control:
+data_stab_p32.mat, data_stab_pv32.mat
 
 # Videos
 There are four video files in the directory ‘Video’. The files replay the simulations. 
@@ -20,5 +21,6 @@ video_p.mp4       : Case 1;
 video_pv.mp4      : Case 2;
 video_pf.mp4      : Case 3;
 video_pvf.mp4     : Case 4;
-video_stab_p.mp4  : Case 5;
-video_stab_pv.mp4 : Case 6.
+
+Stabilization Control:
+video_stab_p.mp4, video_stab_pv.mp4
